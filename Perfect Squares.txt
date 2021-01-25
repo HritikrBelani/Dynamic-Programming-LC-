@@ -1,0 +1,25 @@
+class Solution {
+public:
+    
+    int FindLeastNum(int N ,vector<int>&dp){
+        if(N==0) return 0;
+        if(N<0) return 10000000;
+        if(dp[N]!=-1)
+            return dp[N];
+        int ans = 100000;
+        for(int i = 1 ;i*i <= N ; i ++){
+            ans = min(ans , 1 + FindLeastNum(N - i*i,dp));
+        }
+        return dp[N] = ans;
+    }
+    
+    
+    int numSquares(int n) {
+        vector<int>dp(n+5,-1);
+        int ans = FindLeastNum(n,dp);
+        if(ans==100000)
+            return 0;
+        else
+            return ans;       
+    }
+};

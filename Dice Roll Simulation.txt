@@ -1,0 +1,27 @@
+// Recursive 
+class Solution {
+public:
+    int dp[5001][7][20];   //current Roll // previous roll // previous roll count
+    const int MOD = 1e9 + 7;
+    int Simulate(int curr,int prev,int prevcount,int tot,vector<int>&rollMax){
+        if(curr>tot){
+            return 1;
+        }
+        if(dp[curr][prev][prevcount]!=-1)
+                return dp[curr][prev][prevcount];
+        int ans = 0;
+        for(int i = 1 ;i <=6 ; i ++){
+            if(prev==i){
+                if((prevcount+1)<=rollMax[i-1]){
+                  ans = (ans%MOD + Simulate(curr+1,i,prevcount+1,tot,rollMax)%MOD)%MOD;
+                }
+            }
+            else ans = (ans%MOD + Simulate(curr+1,i,1,tot,rollMax)%MOD)%MOD;
+        }
+        return dp[curr][prev][prevcount] = ans;
+    }
+    int dieSimulator(int n, vector<int>& rollMax) {
+        memset(dp,-1,sizeof dp);
+        return Simulate(1,0,0,n,rollMax);
+    }
+};

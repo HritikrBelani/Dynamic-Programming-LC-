@@ -1,0 +1,26 @@
+//
+class Solution {
+public:
+    int dp[50][50];
+    int rec(int S,int E,vector<int>&arr){
+        if(E<=S) return 0;
+        if(dp[S][E]!=-1)
+            return dp[S][E];
+        int ans = INT_MAX;
+        for(int k = S ; k < E ; k ++){
+            int max1 = 0 , max2 = 0;
+            for(int l = S ; l <= k ; l ++){ // first partition 
+                max1 = max(max1, arr[l]);
+            }
+            for(int l = k+1 ; l <= E ; l ++){// Second partition 
+                max2 = max(max2, arr[l]);
+            }
+            ans = min(ans , max1*max2 + rec(S,k,arr) + rec(k+1,E,arr));
+        }
+        return dp[S][E] = ans;
+    }
+    int mctFromLeafValues(vector<int>& arr) {
+        memset(dp,-1,sizeof dp);
+        return rec(0,arr.size()-1,arr);
+    }
+};

@@ -1,0 +1,35 @@
+//
+class Solution {
+public:
+    int dp[1002][1002];
+    unordered_map<int,int>MAP;
+    int N;
+    int FindMaxLen(int curr,int prev,vector<int>&A){
+        cout << curr << " " << prev << "\n";
+        if(curr>=N)
+            return 0;
+        if(dp[curr][prev]!=-1)
+            return dp[curr][prev];
+        int ans = 0;
+        if(MAP.count(A[curr] + A[prev])){
+            ans = max(ans , 1 + FindMaxLen(MAP[A[curr]+A[prev]],curr,A));
+        }
+        return dp[curr][prev] = ans;
+    }
+    int lenLongestFibSubseq(vector<int>& A) {
+        memset(dp,-1,sizeof dp);
+        N = A.size()-1;
+        for(int i = 0 ;i < (int)A.size(); i ++){
+            MAP[A[i]] = i;
+        }
+        int ans = 2;
+        for(int i = 0 ;i < (int)A.size()-1; i ++){
+            for(int j = i + 1 ; j < (int)A.size(); j ++){
+                if(MAP.count(A[i] + A[j])){
+                    ans = max(ans , 3 + FindMaxLen(MAP[A[i]+A[j]],j,A));
+                }
+            }
+        }
+        return ans==2?0:ans;
+    }
+};

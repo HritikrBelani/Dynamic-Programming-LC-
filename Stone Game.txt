@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int dp[501][501];
+    
+    int Play(int L,int R,vector<int>&piles){
+        if((L+1)==R){
+            return max(piles[L],piles[R]);
+        }
+        if(dp[L][R]!=-1)
+            return dp[L][R];
+        int ans1 = piles[L] + min(Play(L+2,R,piles),Play(L+1,R-1,piles));
+        int ans2 = piles[R] + min(Play(L,R-2,piles),Play(L+1,R-1,piles));
+        int ans = min(ans1,ans2);
+        return dp[L][R] = ans;
+    }
+    
+    bool stoneGame(vector<int>& piles) {
+        memset(dp,-1,sizeof dp);
+        // if Alex will take A[i], Lee will take A[j]or A[i+1], trying to minimize the score which Alex will gain from the f(i+2,j) if he take A[i] and f(i+1,j-1) if he takes A[j];
+        return Play(0,piles.size()-1,piles) > 0;
+    }
+};

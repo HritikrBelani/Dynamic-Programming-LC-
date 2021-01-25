@@ -1,0 +1,79 @@
+// TOP DOWN
+
+class Solution {
+public:
+    int dp[5001][4][4][4];    
+    const int MOD = 1e9 + 7;
+    int Rec(int Row,int C1,int C2,int C3,int n){
+        if(Row==(n+1)){
+            return 1;
+        }
+        if(dp[Row][C1][C2][C3]!=-1) 
+                return dp[Row][C1][C2][C3];
+        int  Ans = 0;
+        for(int i = 1 ; i <= 3 ; i ++){
+            for(int j = 1 ; j <= 3 ; j ++){
+                for(int k = 1 ; k <= 3 ; k ++){
+                    if(i!=j&&j!=k&&i!=C1&&j!=C2&&k!=C3){
+                        Ans = (Ans%MOD + Rec(Row+1,i,j,k,n)%MOD)%MOD;
+                    }
+                }
+            }
+        }
+        return dp[Row][C1][C2][C3] = Ans;
+    }
+    
+    int numOfWays(int n) {
+        memset(dp,-1,sizeof dp);
+        return Rec(1,0,0,0,n);
+    }
+};
+
+
+// BOTTOM UP
+class Solution {
+public:
+    int dp[5001][4][4][4];    
+   
+    const int mod = 1e9+7;
+    int numOfWays(int n) {
+        memset(dp,0,sizeof dp);
+        for(int i = 1 ; i <= 3; i ++){
+            for(int j = 1; j <= 3 ; j ++){
+                for(int k = 1 ; k <= 3 ; k ++){
+                    if(i!=j&&j!=k)
+                        dp[1][i][j][k] = 1;
+                }
+            }
+        }
+        for(int row = 2; row <=n ; row ++){
+            for(int i = 1 ; i <=3; i ++){
+                for(int j = 1 ; j <=3 ; j ++){
+                    for(int k = 1 ; k <=3 ; k ++){
+                        for(int l = 1; l <=3 ; l ++){
+                            for(int m = 1; m <=3 ; m ++){
+                                for(int n = 1 ; n <= 3 ; n ++){
+                                    if(i!=j&&j!=k&&l!=i&&m!=j&&n!=k){
+                                         dp[row][i][j][k] = ((dp[row][i][j][k])%mod + dp[row-1][l][m][n]%mod)%mod;
+                                    
+                                    }
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        int ans = 0;
+        for(int i = 1;i <= 3 ; i ++){
+            for(int j = 1 ; j <= 3 ; j ++){
+                for(int k = 1 ; k <= 3 ; k ++){
+                    if(i!=j&&j!=k)
+                        ans=(ans%mod+dp[n][i][j][k]%mod)%mod;
+                }
+            }
+        }
+         return ans;                                                                     
+    }
+};

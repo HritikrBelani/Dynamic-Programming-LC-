@@ -1,0 +1,44 @@
+// 
+class Solution {
+public:
+    int dp[101][101][2];
+    int prefix[102];
+    int N;
+    int GetSum(int curr,int M,vector<int>&A,int chance){
+        if(curr==N+1)
+            return 0;
+        if(dp[curr][M][chance]!=-1)
+                return dp[curr][M][chance];
+        int sum = 0;
+        if(chance){ // ALice Moves
+            for(int i = 1;i <=2*M ; i ++){
+                if((curr+i-1)<=N){ // Maximize Alice Score.
+                sum = max(sum,prefix[curr+i-1]-prefix[curr-1]+GetSum(curr+i,max(M,i),A,!chance));
+                }
+            }
+        }
+        else{ // Lee moves.
+            sum = INT_MAX;  // Try to minimize lee score 
+             for(int i = 1;i <=2*M ; i ++){
+                if((curr+i-1)<=N)
+                sum = min(sum,GetSum(curr+i,max(M,i),A,!chance));
+                else
+                    break;
+        }
+    }
+        return dp[curr][M][chance] = sum;
+    }
+    
+    
+    int stoneGameII(vector<int>& piles) {
+        memset(dp,-1,sizeof dp);
+        prefix[1] = piles[0];
+        for(int i = 2;i <= piles.size(); i ++){
+            prefix[i] = prefix[i-1] + piles[i-1]; 
+        }
+        N = piles.size();
+        return GetSum(1,1,piles,1);
+    }
+    
+    
+};

@@ -1,0 +1,48 @@
+class Solution {
+public:
+    static bool compare(const string &A,const string &B){
+        return A.size() < B.size();
+    }
+    int dp[1001][1001];
+    int Rec(int pos,int prev,vector<string>& words){
+        if(pos==words.size()){
+            return 0;
+        }
+        if(dp[pos][prev]!=-1)
+            return dp[pos][prev];
+        int ans = 0;
+        if((words[pos].size()-words[prev].size())==1){
+            bool ispossible = true;
+            for(int i = 0 ;i < words[prev].size(); i ++){
+                if(words[prev][i]!=words[pos][i]){
+                    int j = i ;
+                    j ++;
+                    while(i<words[prev].size()){
+                        if(words[pos][j]!=words[prev][i]){
+                            ispossible = false;
+                        }
+                        i++;
+                        j++;
+                    }   
+                }
+            }
+            if(ispossible){
+                ans = max(ans, 1 + Rec(pos+1,pos,words));
+            }
+            ans = max(ans , Rec(pos+1,prev,words));
+        }
+        else{
+            ans = max(ans,Rec(pos+1,prev,words));
+        }
+       return dp[pos][prev] = ans;
+    }
+    int longestStrChain(vector<string>& words) {
+        memset(dp,-1,sizeof dp);
+        sort(words.begin(),words.end(),compare);
+        int ans = 0;
+        for(int i = 0 ;i < words.size()-1; i ++){
+            ans = max(ans ,1 + Rec(i+1,i,words));
+        }
+        return ans;
+    }
+};

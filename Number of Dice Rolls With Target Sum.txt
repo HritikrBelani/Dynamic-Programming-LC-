@@ -1,0 +1,32 @@
+class Solution {
+public:
+    // dice position , Target
+    int dp[31][1001];
+    int End ;
+    const int MOD = 1e9+7;
+    int Rec(int current, int Face,int Target){
+        if(current==End+1){
+            return Target==0;
+        }
+        if(Target<0)
+            return 0;
+        if(dp[current][Target]!=-1)
+            return dp[current][Target];
+        int ans = 0;
+        for(int i = 1;i <=Face; i ++){
+            ans = ans + Rec(current+1,Face,Target-i);
+            if(ans>=MOD)
+                ans-=MOD;
+        }
+        return dp[current][Target] = ans;
+    }
+    
+    int numRollsToTarget(int d, int f, int target) {
+        memset(dp,-1,sizeof dp);
+        End = d;
+        return Rec(1,f,target);
+    }
+};
+
+
+//

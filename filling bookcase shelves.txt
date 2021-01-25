@@ -1,0 +1,26 @@
+//
+class Solution {
+public:
+    int dp[1001][1001];  // currentbook , currentWidth.
+    int Rec(int currentBook,int currentWidth,vector<vector<int>>&A,int shelf_width,int height){
+        if(currentBook==A.size()){
+            return height;
+        }
+        if(dp[currentBook][currentWidth]!=-1)
+            return dp[currentBook][currentWidth];
+        int ans = INT_MAX;
+        if((currentWidth + A[currentBook][0])<=shelf_width){
+          ans = min(ans , Rec(currentBook+1,currentWidth+A[currentBook][0],A,shelf_width,max(height,A[currentBook][1])));
+          ans = min(ans , height+Rec(currentBook+1,A[currentBook][0],A,shelf_width,A[currentBook][1]));
+        }
+        else{
+          ans = min(ans , height+Rec(currentBook+1,A[currentBook][0],A,shelf_width,A[currentBook][1]));
+        }
+        return dp[currentBook][currentWidth] = ans;
+    }
+    
+    int minHeightShelves(vector<vector<int>>& books, int shelf_width) {
+        memset(dp,-1,sizeof dp);
+        return Rec(1,books[0][0],books,shelf_width,books[0][1]);
+    }
+};

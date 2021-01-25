@@ -1,0 +1,52 @@
+class Solution {
+public:
+    bool IsValid(int A,int B ,int C,int D,int E,int F,vector<int>chk){
+        A-=chk[0],B-=chk[1],C-=chk[2],D-=chk[3],E-=chk[4],F-=chk[5];
+        return !(A<0||B<0||C<0||D<0||E<0||F<0);
+    }
+    int dp[7][7][7][7][7][7];
+    int Rec(int A,int B,int C,int D,int E,int F,vector<int>&price,vector<vector<int>>&special){
+        cout << A << " " << B << " " << C << " " << D << " " << E << "\n"; // debug 
+        if(A==0&&B==0&&C==0&&D==0&&E==0&&F==0){
+            return 0;
+        }
+        if(dp[A][B][C][D][E][F]!=-1)
+                return dp[A][B][C][D][E][F];
+        int ans = INT_MAX;
+        for(int i = 0 ; i < special.size(); i ++){
+             if(IsValid(A,B,C,D,E,F,special[i]))
+        ans = min(ans,special[i][6]+Rec(A-special[i][0],B-special[i][1],C-special[i][2],D-special[i][3],E-special[i][4],F-special[i][5],price,special));  
+        }
+        int CostlyWay = 0;
+        CostlyWay+=A*price[0];
+        CostlyWay+=B*price[1];
+        CostlyWay+=C*price[2];
+        CostlyWay+=D*price[3];
+        CostlyWay+=E*price[4];
+        CostlyWay+=F*price[5];
+        ans = min(ans , CostlyWay + Rec(0,0,0,0,0,0,price,special));
+        return dp[A][B][C][D][E][F]= ans;
+    }
+    int shoppingOffers(vector<int>& price, vector<vector<int>>& special, vector<int>& needs) {
+        memset(dp,-1,sizeof dp);
+        while(needs.size()!=6)
+            needs.push_back(0);
+        while(price.size()!=6)
+            price.push_back(0);
+        for(int i = 0; i < special.size(); i ++){
+            int temp = special[i].back();
+            special[i].pop_back();
+            while(special[i].size()!=6){
+                special[i].push_back(0);
+            }
+            special[i].push_back(temp);
+        }
+        int A = needs[0];
+        int B = needs[1];
+        int C = needs[2];
+        int D = needs[3];
+        int E = needs[4];
+        int F = needs[5];
+        return Rec(A,B,C,D,E,F,price,special);
+    }
+};

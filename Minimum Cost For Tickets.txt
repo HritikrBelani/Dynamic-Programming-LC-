@@ -1,0 +1,37 @@
+//
+class Solution {
+public:
+    int dp[1000];
+    int Last;
+    int MinCOST(int curr,vector<int>&days,vector<int>&Costs){
+        if(curr>Last)
+            return 0;
+        if(dp[curr]!=-1)
+           return dp[curr];
+        int ans = INT_MAX;
+        auto it = lower_bound(days.begin(),days.end(),curr);
+        if(it!=Costs.end()&&(*it!=curr)){
+            ans = min(ans,Costs[0] + MinCOST(curr+1,days,Costs));
+            ans = min(ans,Costs[1] + MinCOST(curr+7,days,Costs));
+            ans = min(ans,Costs[2] + MinCOST(curr+30,days,Costs));
+            ans = min(ans,MinCOST(curr+1,days,Costs));
+        }
+        else if(it!=Costs.end()&&(*it==curr)){
+            ans = min(ans,Costs[0] + MinCOST(curr+1,days,Costs));
+            ans = min(ans,Costs[1] + MinCOST(curr+7,days,Costs));
+            ans = min(ans,Costs[2] + MinCOST(curr+30,days,Costs));
+        }
+        else{
+             ans = min(ans,MinCOST(curr+1,days,Costs));
+        }
+        return dp[curr] = ans;
+    }
+    
+    int mincostTickets(vector<int>& days, vector<int>& costs) {
+        sort(days.begin(),days.end());
+        Last = days.back();
+        //cout << Last << "\n";
+        memset(dp,-1,sizeof dp);
+        return MinCOST(1,days,costs);
+    }
+};

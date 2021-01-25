@@ -1,0 +1,35 @@
+class Solution {
+public: 
+    double dp[101][101];
+    int Size;
+    double NegInf = -20000.00;
+    double Zero = 0.0000;
+    double ComputeSUM(int curr,int Partitions,vector<int>&A){
+        if(curr==Size){
+            if(Partitions==0)
+                return Zero;
+            else
+                return NegInf;
+        }
+        if(Partitions<=0)
+            return NegInf;
+        if(dp[curr][Partitions]!=-1.00)
+            return dp[curr][Partitions];
+        double ans = 0.00;
+        double sum = 0;
+        for(int i = curr; i <Size ; i ++){
+            sum = sum + A[i];
+            ans = max(ans , (double)(sum)/(double)(i - curr + 1) + ComputeSUM(i+1,Partitions-1,A));
+        }
+        return dp[curr][Partitions] = ans;
+    }
+    double largestSumOfAverages(vector<int>& A, int K) {
+        for(int i = 0 ;i <=100 ; i ++){
+            for(int j = 0 ; j <=100; j ++){
+                dp[i][j] = -1.00;
+            }
+        }
+        Size = A.size();
+        return ComputeSUM(0,K,A);
+    }
+};

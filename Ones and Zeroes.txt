@@ -1,0 +1,41 @@
+//
+class Solution {
+public:
+    int dp[601][101][101];
+    int Inf = -100000;
+    int Size;
+    int findnoofstrings(int currString,int M,int N,vector<pair<int,int>>& S){
+        if(currString>Size){
+            if(M>=0&&N>=0)
+                return 0;
+            else
+                return Inf;
+        }
+        if(dp[currString][M][N]!=-1)
+            return dp[currString][M][N];
+        int ans = 0;
+        int Ones = S[currString].first;
+        int Zeroes = S[currString].second;
+        if((M-Zeroes)>=0&&(N-Ones)>=0)
+            ans = max(ans , 1 + findnoofstrings(currString+1,M-Zeroes,N-Ones,S));
+        ans = max(ans , findnoofstrings(currString+1,M,N,S));
+        return dp[currString][M][N] = ans;
+    }
+    int findMaxForm(vector<string>& strs, int m, int n){
+        memset(dp,-1,sizeof dp);
+        Size = strs.size()-1;
+        vector<pair<int,int>>V;
+        for(int i = 0 ;i <(int)strs.size(); i++){
+            int o = 0 , z = 0;
+            for(int j = 0 ; j < strs[i].size(); j ++){
+                if(strs[i][j]=='0')
+                    z++;
+                else
+                    o++;
+            }
+            V.push_back({o,z});
+        }
+        int ans = findnoofstrings(0,m,n,V);
+        return ans;
+    }
+};
